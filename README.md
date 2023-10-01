@@ -1,6 +1,6 @@
-## Headless chatbox component in React
+# react-headless-chatbox
 
-A simple headless chatbox component that consists of:
+A simple headless chatbox React component that consists of:
 - A Messages container that is scrolled automatically when a new message is sent
 - Chat messages that are styled differently per participant in the chat (e.g. aligned left/right)
 - A Message textbox that grows automatically and is cleared after submission
