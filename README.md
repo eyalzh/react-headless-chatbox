@@ -1,12 +1,16 @@
-# react-headless-chatbox
+# React Headless Chatbox
 
 A simple headless chatbox React component that consists of:
-- A Messages container that is scrolled automatically when a new message is sent
+- A messages container that is scrolled automatically
 - Chat messages that are styled differently per participant in the chat (e.g. aligned left/right)
-- A Message textbox that grows automatically and is cleared after submission
+- A textbox that grows with content and is cleared after submission
 - A trigger button
 
 With this headless implementation, you can fully style and position the messages, the textbox and the trigger.
+
+## Example
+
+<img src="https://s3.eu-west-1.amazonaws.com/simple.kanban/chatbox-demo1.png" width="400"  />
 
 ## Install
 
@@ -20,7 +24,7 @@ yarn add react-headless-chatbox
 
 ## Example:
 
-The following example uses tailwind to style the chatbox.
+The following code uses tailwind to style the chatbox, as shown in the example above.
 
 ```jsx
 import { useState } from "react";
@@ -120,10 +124,6 @@ The trigger.svg file:
 <rect class="st0" width="24" height="24"/>
 </svg>
 ```
-
-This will produce:
-
-<img src="https://s3.eu-west-1.amazonaws.com/simple.kanban/chatbox-demo1.png" width="400"  />
 
 ## API
 
