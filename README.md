@@ -12,6 +12,7 @@ With this headless implementation, you can fully style and position the messages
 
 <img src="https://s3.eu-west-1.amazonaws.com/simple.kanban/chatbox-demo1.png" width="400"  />
 
+
 ## Install
 
 ```bash
@@ -22,9 +23,9 @@ npm install react-headless-chatbox
 yarn add react-headless-chatbox
 ```
 
-## Example:
+## Code Example
 
-The following code uses tailwind to style the chatbox, as shown in the example above.
+The following code example uses tailwind to style the chatbox, as shown in the image above:
 
 ```jsx
 import { useState } from "react";
