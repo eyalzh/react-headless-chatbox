@@ -37,12 +37,12 @@ interface Message extends ChatboxMessage {
   // Add more properties here
 }
 
-const participants = [
+const PARTICIPANTS = [
   { id: "john", side: "left"},
   { id: "jane", side: "right" },
 ] satisfies Participant[];
 
-const MESSAGES_INITIAL_STATE = [
+const MESSAGES = [
   {
     id: "1",
     participantId: "john",
@@ -56,7 +56,7 @@ const MESSAGES_INITIAL_STATE = [
 ] satisfies Message[];
 
 function MyChatbox() {
-  const [messages, setMessages] = useState(MESSAGES_INITIAL_STATE);
+  const [messages, setMessages] = useState(MESSAGES);
 
   const onMessageSend = (text: string) => {
     const newMessage = {
@@ -70,7 +70,7 @@ function MyChatbox() {
   return (
     <div className="w-full h-full bg-white">
       <Chatbox
-        participants={participants}
+        participants={PARTICIPANTS}
         messages={messages}
         onMessageSend={onMessageSend}
         className="m-20 border-2 border-gray-200 rounded-b-md shadow-md w-96 h-96 relative"
