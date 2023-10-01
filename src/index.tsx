@@ -1,3 +1,4 @@
+import React from "react";
 import {
   createContext,
   useContext,
@@ -8,16 +9,18 @@ import {
   ChangeEventHandler,
   PropsWithChildren,
   CSSProperties,
+  forwardRef,
+  useImperativeHandle,
 } from "react";
 
 export type ChatBoxSide = "left" | "right";
 
-export interface ChatboxParticipantProps {
+export interface Participant {
   id: string;
   side: ChatBoxSide;
 }
 
-export interface ChatboxMessage {
+export interface Message {
   participantId: string;
 }
 
@@ -27,27 +30,32 @@ interface ChatboxComponentProps extends PropsWithChildren {
 }
 
 interface ChatboxMessageComponentProps<
-  TParticipant extends ChatboxParticipantProps
+  TParticipant extends Participant
 > extends Omit<ChatboxComponentProps, "className"> {
   className: string | ((participant: TParticipant) => string);
-  message: ChatboxMessage;
+  message: Message;
 }
 
 interface ChatboxContainerProps extends ChatboxComponentProps {
-  participants: ChatboxParticipantProps[];
-  messages: ChatboxMessage[];
+  participants: Participant[];
+  messages: Message[];
   onMessageSend: (message: string) => void;
   autoScrollDown?: boolean; // Scrolls down to the latest message (default: true)
 }
 
-interface ChatboxTextProps extends Omit<ChatboxComponentProps, "children"> {
+interface ChatboxTextboxProps extends Omit<ChatboxComponentProps, "children"> {
   placeholder?: string;
   maxLength?: number;
   onChange?: ChangeEventHandler<HTMLTextAreaElement>;
+  "aria-label"?: string;
+}
+
+interface ChatboxTriggerProps extends ChatboxComponentProps {
+  "aria-label"?: string;
 }
 
 interface ChatboxContext {
-  participants: ChatboxParticipantProps[];
+  participants: Participant[];
   autoScrollDown?: boolean;
   inputValue: string;
   setInputValue: (value: string) => void;
@@ -56,7 +64,10 @@ interface ChatboxContext {
 
 const ChatboxContext = createContext<ChatboxContext | null>(null);
 
-export function Container(props: ChatboxContainerProps) {
+export const Container = forwardRef(function Container(
+  props: ChatboxContainerProps,
+  ref: React.Ref<HTMLDivElement>
+) {
   const [inputValue, setInputValue] = useState("");
 
   const contextValue: ChatboxContext = {
@@ -76,20 +87,27 @@ export function Container(props: ChatboxContainerProps) {
       <div
         className={props.className}
         style={{ display: "flex", flexDirection: "column", ...props.style }}
+        aria-label="Chatbox"
+        ref={ref}
       >
         {props.children}
       </div>
     </ChatboxContext.Provider>
   );
-}
+});
 
-export function Messages(props: ChatboxComponentProps) {
+export const Messages = forwardRef(function Messages(
+  props: ChatboxComponentProps,
+  ref: React.Ref<HTMLDivElement | null>
+) {
   const chatboxProps = useContext(ChatboxContext);
-  const ref = useRef<HTMLDivElement>(null);
+  const internalRef = useRef<HTMLDivElement>(null);
+
+  useImperativeHandle(ref, () => internalRef.current);
 
   useLayoutEffect(() => {
     if (chatboxProps?.autoScrollDown !== false) {
-      const messagesContainer = ref.current;
+      const messagesContainer = internalRef.current;
       messagesContainer?.scrollTo({
         top: messagesContainer.scrollHeight,
         behavior: "instant",
@@ -108,13 +126,18 @@ export function Messages(props: ChatboxComponentProps) {
   );
 
   return (
-    <div ref={ref} className={props.className} style={style}>
+    <div
+      ref={internalRef}
+      className={props.className}
+      style={style}
+      aria-live="polite"
+    >
       {props.children}
     </div>
   );
-}
+});
 
-export function Message<TParticipant extends ChatboxParticipantProps>(
+export function Message<TParticipant extends Participant>(
   props: ChatboxMessageComponentProps<TParticipant>
 ) {
   const chatboxProps = useContext(ChatboxContext);
@@ -153,10 +176,15 @@ export function Message<TParticipant extends ChatboxParticipantProps>(
   );
 }
 
-export function Text(props: ChatboxTextProps) {
+export const Textbox = forwardRef(function Textbox(
+  props: ChatboxTextboxProps,
+  ref: React.Ref<HTMLTextAreaElement | null>
+) {
   const chatboxProps = useContext(ChatboxContext);
 
   const textboxRef = useRef<HTMLTextAreaElement | null>(null);
+
+  useImperativeHandle(ref, () => textboxRef.current);
 
   useLayoutEffect(() => {
     // TODO: replace with formSizing CSS property once it's widely supported
@@ -189,7 +217,7 @@ export function Text(props: ChatboxTextProps) {
       rows={1}
       ref={textboxRef}
       className={props.className}
-      aria-label="Text Message"
+      aria-label={props["aria-label"] ?? "Message to send"}
       placeholder={props.placeholder ?? "Message"}
       onChange={onInputChange}
       value={chatboxProps?.inputValue ?? ""}
@@ -198,27 +226,32 @@ export function Text(props: ChatboxTextProps) {
       maxLength={props.maxLength}
     />
   );
-}
+});
 
-export function Trigger(props: ChatboxComponentProps) {
+export const Trigger = forwardRef(function Trigger(
+  props: ChatboxTriggerProps,
+  ref: React.Ref<HTMLButtonElement>
+) {
   const chatboxProps = useContext(ChatboxContext);
   const onTriggerClick = () => {
     chatboxProps?.onSubmit();
   };
   return (
-    <div
+    <button
       onClick={onTriggerClick}
       className={props.className}
       style={props.style}
+      aria-label={props["aria-label"] ?? "Send Message"}
+      ref={ref}
     >
       {props.children}
-    </div>
+    </button>
   );
-}
+});
 
 export const Chatbox = Object.assign(Container, {
   Messages,
   Message,
-  Text,
+  Textbox,
   Trigger,
 });
