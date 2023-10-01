@@ -10,7 +10,7 @@ With this headless implementation, you can fully style and position the messages
 
 ## Example
 
-<img src="https://s3.eu-west-1.amazonaws.com/simple.kanban/chatbox-demo1.png" width="400"  />
+<img src="https://s3.eu-west-1.amazonaws.com/simple.kanban/chatbox-demo2.png" width="400"  />
 
 
 ## Install
@@ -78,7 +78,7 @@ function MyChatbox() {
         participants={PARTICIPANTS}
         messages={messages}
         onMessageSend={onMessageSend}
-        className="m-20 border-2 border-gray-200 rounded-b-md shadow-md w-96 h-96 relative"
+        className="m-20 border-2 border-gray-200 rounded-md shadow-md w-96 h-96 relative overflow-hidden"
       >
         <div className="bg-blue-800 p-4 text-white rounded-t-md">
           Jane (online)
