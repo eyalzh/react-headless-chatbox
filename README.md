@@ -4,7 +4,7 @@ A simple headless chatbox React component that consists of:
 - A messages container that is scrolled automatically
 - Chat messages that are styled differently per participant in the chat (e.g. aligned left/right)
 - A textbox that grows with content and is cleared after submission
-- A trigger button
+- A send button
 
 With this headless implementation, you can fully style and position the messages, the textbox and the trigger.
 
