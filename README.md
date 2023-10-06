@@ -175,3 +175,8 @@ The trigger.svg file:
 | `className` | `string` | Additional CSS classes to apply to the component. |
 | `style` | `React.CSSProperties` | Inline styles to apply to the component. |
 | `aria-label` | `string` | ARIA label for the button (default: "Send Message"). |
+
+## See also
+
+[React Headless Gallery](https://github.com/eyalzh/react-headless-gallery)
+
